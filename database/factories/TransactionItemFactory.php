@@ -24,7 +24,7 @@ class TransactionItemFactory extends Factory
         return [
             'uuid' => $this->faker->uuid(),
             'transaction_id' => $this->faker->randomDigitNotNull(),
-            'title' => $this->faker->sentence(mt_rand(2,8)),
+            'title' => $this->faker->sentence(mt_rand(2,2)),
             'qty' => $this->faker->randomDigitNotNull(),
             'price' => $this->faker->randomNumber(5, true),
         ];
