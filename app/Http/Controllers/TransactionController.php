@@ -18,8 +18,8 @@ class TransactionController extends Controller
      */
     public function index()
     {
-       $transaction = Transaction::latest()->get();
-
+       $transaction = Transaction::paginate(request()->all()); 
+         
        //make response JSON
        return response()->json([
            'success' => true,
