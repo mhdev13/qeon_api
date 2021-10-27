@@ -25,8 +25,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::post('login', [ApiController::class, 'authenticate']);
 Route::post('register', [ApiController::class, 'register']);
 
-Route::group(['middleware' => ['jwt.verify']], function() {
-    Route::get('logout', [ApiController::class, 'logout']);
-    Route::get('get_user', [ApiController::class, 'get_user']);
-    Route::resource('/transaction', TransactionController::class);
-});
+// Route::group(['middleware' => ['jwt.verify']], function() {
+    // Route::get('logout', [ApiController::class, 'logout']);
+    // Route::get('get_user', [ApiController::class, 'get_user']);
+Route::resource('/traceabilityx/transaction', TransactionController::class);
+// });
