@@ -36,7 +36,7 @@ class BatchController extends Controller
         ->where('sb.SupplyOrgID', '=', '767')
         ->get();
 
-        $total = $Batch->count();
+        $Total = $Batch->count();
         
         if($Batch) {
             foreach ($Batch as $key => $value) {
@@ -51,7 +51,7 @@ class BatchController extends Controller
        return response()->json([
            'success' => true,
            'message' => 'Data Berhasil Ditampilkan',
-           'total'   => $total,
+           'total'   => $Total,
            'data'    => $Batch  
        ], 200);
     }
