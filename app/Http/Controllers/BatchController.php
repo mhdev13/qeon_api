@@ -20,7 +20,31 @@ class BatchController extends Controller
      */
     public function index()
     {
-        
+        $Batch = DB::table('ktv_tc_supplychain_batch AS sb')
+        ->select('sb.*',
+        DB::raw('IF(SUM(ktst.VolumeBruto) IS NULL, FORMAT(0, 2),SUM(ktst.VolumeBruto)) AS VolumeBruto'),
+        DB::raw('IF(SUM(ktst.VolumeNetto) IS NULL, FORMAT(0, 2),SUM(ktst.VolumeNetto)) AS VolumeNetto'),
+        'ktst.SupplyTransID')
+        ->leftJoin('view_tc_supplychain_org AS vso', 'vso.SupplychainID', '=', 'sb.SupplyOrgID')
+        ->leftJoin('view_tc_supplychain_org AS vso1', 'vso1.SupplychainID', '=', 'sb.SupplyDestMillOrgID')
+        ->leftJoin('ktv_tc_supplychain_transaction AS ktst', 'ktst.SupplyBatchID', '=', 'sb.SupplyBatchID')
+        ->whereIn('sb.SupplyBatchStatus', ['Open','Closed'])
+        ->where('sb.StatusCode', '=', 'active')
+        ->whereNotNull('ktst.VolumeNetto')
+        ->groupBy('sb.SupplyBatchID')
+        ->orderByDesc('sb.DateCreated')
+        ->where('sb.SupplyOrgID', '=', '767')
+        ->get();
+
+        $total = $Batch->count();
+         
+       //make response JSON
+       return response()->json([
+           'success' => true,
+           'message' => 'Data Berhasil Ditampilkan',
+           'total'   => $total,
+           'data'    => $Batch  
+       ], 200);
     }
 
     /**

@@ -20,77 +20,72 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $transaction = DB::table('ktv_tc_supplychain_transaction')
+        $transaction = DB::table('ktv_tc_supplychain_transaction AS ktst')
         ->select(
-            'ktv_tc_supplychain_transaction.SupplyTransID',
-            'ktv_tc_supplychain_transaction.SupplychainID',
-            'ktv_tc_supplychain_transaction.SupplyBatchID',
-            'ktv_tc_supplychain_transaction.TransNumber',
-            'ktv_tc_supplychain_transaction.InvoiceNumber',
-            'ktv_tc_supplychain_transaction.DateTransaction',
-            'ktv_tc_supplychain_transaction.SupplyType',
-            'ktv_tc_supplychain_transaction.SupplyID',
-            'ktv_tc_supplychain_batch.SupplyDestType',
-            'ktv_tc_supplychain_batch.SupplyDestProcessType',
-            'ktv_tc_supplychain_transaction.PlantationNr',
-            'ktv_tc_supplychain_transaction.VolumeBruto',
-            'ktv_tc_supplychain_transaction.VolumeNetto',
-            'ktv_tc_supplychain_transaction.VolumeCutting',
-            'ktv_tc_supplychain_transaction.PackageID',
-            'ktv_tc_supplychain_transaction.PackageNumber',
-            'ktv_tc_supplychain_transaction.PackageWeight',
-            'ktv_tc_supplychain_transaction.DetailTypeID',
-            'ktv_tc_supplychain_transaction.TransStatusID',
-            'ktv_tc_supplychain_transaction.ContractPrice',
-            'ktv_tc_supplychain_transaction.NetPrice',
-            'ktv_tc_supplychain_transaction.DiscountPrice',
-            'ktv_tc_supplychain_transaction.TotalPayment',
-            'ktv_tc_supplychain_transaction.PaymentReduction',
-            'ktv_tc_supplychain_transaction.PaymentPaid',
-            'ktv_tc_supplychain_transaction.Longitude',
-            'ktv_tc_supplychain_transaction.Latitude',
-            'ktv_tc_supplychain_transaction.Notes',
-            'ktv_tc_supplychain_transaction.ChangeLog',
-            'ktv_tc_supplychain_transaction.ChangeBy',
-            'ktv_tc_supplychain_transaction.DateCreated',
-            'ktv_tc_supplychain_transaction.CreatedBy',
-            'ktv_tc_supplychain_transaction.DateUpdated',
-            'ktv_tc_supplychain_transaction.LastModifiedBy',
-            'ktv_tc_supplychain_transaction.DOID',
-            'ktv_tc_supplychain_transaction.AgentID',
-            'ktv_tc_supplychain_transaction.AgentOther',
-            'ktv_tc_supplychain_transaction.AgentOtherNik',
-            'ktv_tc_supplychain_transaction.AgentOtherSurvey',
-            'ktv_tc_supplychain_transaction.SupplyBatchType',
-            'ktv_tc_supplychain_transaction.MillID',
-            'ktv_tc_supplychain_transaction.MillOther',
-            'ktv_tc_supplychain_transaction.DOOther',
-            'ktv_tc_supplychain_transaction.SupplyBatchSourceType',
-            'ktv_tc_supplychain_transaction.DeductionPercentage',
-            'ktv_tc_supplychain_transaction.DeductionWeight',
-            DB::raw('IFNULL(ktv_tc_supplychain_transaction.Bunches,0) AS Bunches'),
-            'ktv_tc_supplychain_transaction.CollectpointID',
-            'ktv_tc_supplychain_transaction.AutoTransNumber',
-            'ktv_tc_supplychain_transaction.isTraceable'
+            'ktst.SupplyTransID',
+            'ktst.SupplychainID',
+            'ktst.SupplyBatchID',
+            'ktst.TransNumber',
+            'ktst.InvoiceNumber',
+            'ktst.DateTransaction',
+            'ktst.SupplyType',
+            'ktst.SupplyID',
+            'ktsb.SupplyDestType',
+            'ktsb.SupplyDestProcessType',
+            'ktst.PlantationNr',
+            'ktst.VolumeBruto',
+            'ktst.VolumeNetto',
+            'ktst.VolumeCutting',
+            'ktst.PackageID',
+            'ktst.PackageNumber',
+            'ktst.PackageWeight',
+            'ktst.DetailTypeID',
+            'ktst.TransStatusID',
+            'ktst.ContractPrice',
+            'ktst.NetPrice',
+            'ktst.DiscountPrice',
+            'ktst.TotalPayment',
+            'ktst.PaymentReduction',
+            'ktst.PaymentPaid',
+            'ktst.Longitude',
+            'ktst.Latitude',
+            'ktst.Notes',
+            'ktst.ChangeLog',
+            'ktst.ChangeBy',
+            'ktst.DateCreated',
+            'ktst.CreatedBy',
+            'ktst.DateUpdated',
+            'ktst.LastModifiedBy',
+            'ktst.DOID',
+            'ktst.AgentID',
+            'ktst.AgentOther',
+            'ktst.AgentOtherNik',
+            'ktst.AgentOtherSurvey',
+            'ktst.SupplyBatchType',
+            'ktst.MillID',
+            'ktst.MillOther',
+            'ktst.DOOther',
+            'ktst.SupplyBatchSourceType',
+            'ktst.DeductionPercentage',
+            'ktst.DeductionWeight',
+            DB::raw('IFNULL(ktst.Bunches,0) AS Bunches'),
+            'ktst.CollectpointID',
+            'ktst.AutoTransNumber',
+            'ktst.isTraceable'
         )
-        ->leftJoin('ktv_trace_package', 'ktv_trace_package.PackageID', '=', 'ktv_tc_supplychain_transaction.PackageID')
-        ->leftJoin('ktv_tc_supplychain_batch', 'ktv_tc_supplychain_batch.SupplyBatchID', '=', 'ktv_tc_supplychain_transaction.SupplyBatchID')
-        ->where('ktv_tc_supplychain_transaction.StatusCode', '=', 'active')
-        ->where('ktv_tc_supplychain_transaction.SupplychainID', '=', '767')
+        ->leftJoin('ktv_trace_package AS ktp', 'ktp.PackageID', '=', 'ktst.PackageID')
+        ->leftJoin('ktv_tc_supplychain_batch AS ktsb', 'ktsb.SupplyBatchID', '=', 'ktst.SupplyBatchID')
+        ->where('ktst.StatusCode', '=', 'active')
+        ->where('ktst.SupplychainID', '=', '767')
         ->get();
 
-        $count = DB::table('ktv_tc_supplychain_transaction')
-        ->leftJoin('ktv_trace_package', 'ktv_trace_package.PackageID', '=', 'ktv_tc_supplychain_transaction.PackageID')
-        ->leftJoin('ktv_tc_supplychain_batch', 'ktv_tc_supplychain_batch.SupplyBatchID', '=', 'ktv_tc_supplychain_transaction.SupplyBatchID')
-        ->where('ktv_tc_supplychain_transaction.StatusCode', '=', 'active')
-        ->where('ktv_tc_supplychain_transaction.SupplychainID', '=', '767')
-        ->count();
+        $total = $transaction->count();
          
        //make response JSON
        return response()->json([
            'success' => true,
            'message' => 'Data Berhasil Ditampilkan',
-           'total' => $count,
+           'total'   => $total,
            'data'    => $transaction  
        ], 200);
     }
