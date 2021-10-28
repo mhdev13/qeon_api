@@ -37,7 +37,16 @@ class BatchController extends Controller
         ->get();
 
         $total = $Batch->count();
-         
+        
+        if($Batch) {
+            foreach ($Batch as $key => $value) {
+                $Batch[$key]->trans = DB::table('ktv_tc_supplychain_transaction AS c')
+                ->where('c.StatusCode', '=', 'active')
+                ->where('c.SupplyBatchID', '=', $value->SupplyBatchID)
+                ->get();
+            }
+        }
+
        //make response JSON
        return response()->json([
            'success' => true,
