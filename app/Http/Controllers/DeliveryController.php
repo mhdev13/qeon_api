@@ -78,14 +78,20 @@ class DeliveryController extends Controller
 
         $Total = $Delivery->count();
         
-        // if($Delivery) {
-        //     foreach ($Delivery as $key => $value) {
-        //         $Delivery[$key]->trans = DB::table('ktv_tc_supplychain_transaction AS c')
-        //         ->where('c.StatusCode', '=', 'active')
-        //         ->where('c.SupplyBatchID', '=', $value->SupplyBatchID)
-        //         ->get();
-        //     }
-        // }
+        if($Delivery) {
+            foreach ($Delivery as $key => $value) {
+                $Delivery[$key]->DeliveryDetail = DB::table('ktv_tc_supplychain_delivery_detail AS ktsdd')
+                ->select('ktsdd.DeliveryDetailID',
+                'ktsdd.DeliveryID',
+                'ktsdd.StatusCode AS Status',
+                DB::raw('SUM(ktsdd.Weight) AS Weight'),
+                'ktsdd.SupplyBatchID',
+                )
+                ->where('ktsdd.DeliveryID', '=', $value->deliveryID)
+                ->where('ktsdd.StatusCode', '=', 'active' )
+                ->get();
+            }
+        }
 
        //make response JSON
        return response()->json([
