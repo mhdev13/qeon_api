@@ -22,7 +22,7 @@ class DeliveryController extends Controller
     public function index()
     {
         $Delivery = DB::table('ktv_tc_supplychain_delivery AS ktsd')
-        ->select('ktsd.deliveryID',
+        ->select('ktsd.DeliveryID',
         'ktsd.DeliveryNumber',
         'ktsd.ExternalCode',
         'ktsd.DeliveryDate',
@@ -31,8 +31,6 @@ class DeliveryController extends Controller
         'ktsd.SupplyDestMillOrgID',
         DB::raw('IF(ktsd.SupplyDestMillOtherName IS NULL or ktsd.SupplyDestMillOtherName = "", "",ktsd.SupplyDestMillOtherName) AS SupplyDestMillOtherName'),
         'ktsd.SupplyDestMillOtherName',
-        'ktsd.SupplyDestDoOrgID',
-        'ktsd.SupplyDestDoOrgID',
         'ktsd.SupplyDestType',
         'ktsd.SupplyDestProcessType',
         'ktsd.SupplyBatchCategory',
@@ -84,12 +82,21 @@ class DeliveryController extends Controller
                 ->select('ktsdd.DeliveryDetailID',
                 'ktsdd.DeliveryID',
                 'ktsdd.StatusCode AS Status',
+                'ktsd.SupplychainID',
                 DB::raw('SUM(ktsdd.Weight) AS Weight'),
                 'ktsdd.SupplyBatchID',
                 )
-                ->where('ktsdd.DeliveryID', '=', $value->deliveryID)
-                ->where('ktsdd.StatusCode', '=', 'active' )
+                ->leftJoin('ktv_tc_supplychain_delivery AS ktsd', 'ktsd.DeliveryID', '=', 'ktsdd.DeliveryID')
+                ->where('ktsd.DeliveryID', '=', $value->DeliveryID)
+                ->where('ktsd.StatusCode', '=', 'active' )
                 ->get();
+
+                $Delivery[$key]->SupplychainID = DB::table('ktv_tc_supplychain_delivery_detail AS ktsdd')
+                ->select('ktsd.SupplychainID')
+                ->leftJoin('ktv_tc_supplychain_delivery AS ktsd', 'ktsdd.DeliveryID', '=', 'ktsd.DeliveryID')
+                ->where('ktsdd.DeliveryID', '=', $value->DeliveryID)
+                ->where('ktsdd.StatusCode', '=', 'active' )
+                ->first();
             }
         }
 
