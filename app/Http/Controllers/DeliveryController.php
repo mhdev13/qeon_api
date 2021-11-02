@@ -91,7 +91,7 @@ class DeliveryController extends Controller
                 ->where('ktsd.StatusCode', '=', 'active' )
                 ->get();
 
-                $Delivery[$key]->SupplychainID = DB::table('ktv_tc_supplychain_delivery_detail AS ktsdd')
+                $value->SupplychainID = DB::table('ktv_tc_supplychain_delivery_detail AS ktsdd')
                 ->select('ktsd.SupplychainID')
                 ->leftJoin('ktv_tc_supplychain_delivery AS ktsd', 'ktsdd.DeliveryID', '=', 'ktsd.DeliveryID')
                 ->where('ktsdd.DeliveryID', '=', $value->DeliveryID)
