@@ -19,7 +19,7 @@ class DeliveryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $Delivery = DB::table('ktv_tc_supplychain_delivery AS ktsd')
         ->select('ktsd.DeliveryID',
@@ -69,7 +69,7 @@ class DeliveryController extends Controller
         ->leftJoin('ktv_tc_supplychain_batch AS ktsb', 'ktsb.SupplyBatchID', '=', 'ktsdd.SupplyBatchID')
         ->where('ktsd.StatusCode', '=', 'active')
         ->where('ktsd.DeliveryStatusID', '!=', '0')
-        ->where('ktsd.SupplychainID', '=', '767')
+        ->where('ktsd.SupplychainID', '=', $request->SID)
         ->groupBy('ktsd.DeliveryID')
         ->orderByDesc('ktsd.DeliveryID')
         ->get();
