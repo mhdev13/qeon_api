@@ -82,7 +82,6 @@ class DeliveryController extends Controller
                 ->select('ktsdd.DeliveryDetailID',
                 'ktsdd.DeliveryID',
                 'ktsdd.StatusCode AS Status',
-                'ktsd.SupplychainID',
                 DB::raw('SUM(ktsdd.Weight) AS Weight'),
                 'ktsdd.SupplyBatchID',
                 )
@@ -96,7 +95,7 @@ class DeliveryController extends Controller
                 ->leftJoin('ktv_tc_supplychain_delivery AS ktsd', 'ktsdd.DeliveryID', '=', 'ktsd.DeliveryID')
                 ->where('ktsdd.DeliveryID', '=', $value->DeliveryID)
                 ->where('ktsdd.StatusCode', '=', 'active' )
-                ->first();
+                ->value('ktsd.SupplychainID');
             }
         }
 
