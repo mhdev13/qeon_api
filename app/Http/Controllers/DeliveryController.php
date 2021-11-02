@@ -90,11 +90,11 @@ class DeliveryController extends Controller
                 ->where('ktsd.StatusCode', '=', 'active' )
                 ->get();
 
-                $value->SupplychainID = DB::table('ktv_tc_supplychain_delivery_detail AS ktsdd')
+                $value->SupplychainID = DB::table('ktv_tc_supplychain_delivery AS ktsd')
                 ->select('ktsd.SupplychainID')
-                ->leftJoin('ktv_tc_supplychain_delivery AS ktsd', 'ktsdd.DeliveryID', '=', 'ktsd.DeliveryID')
-                ->where('ktsdd.DeliveryID', '=', $value->DeliveryID)
-                ->where('ktsdd.StatusCode', '=', 'active' )
+                ->leftJoin('view_tc_supplychain_org AS vso', 'vso.SupplychainID', '=', 'ktsd.SupplyDestMillOrgID')
+                ->where('ktsd.DeliveryID', '=', $value->DeliveryID)
+                ->where('ktsd.StatusCode', '=', 'active' )
                 ->value('ktsd.SupplychainID');
             }
         }
