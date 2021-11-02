@@ -30,6 +30,7 @@ Route::post('register', [ApiController::class, 'register']);
     // Route::get('get_user', [ApiController::class, 'get_user']);
 Route::resource('/traceabilityx/transaction', TransactionController::class);
 Route::resource('/traceabilityx/batch', BatchController::class);
+Route::resource('/traceabilityx/batch-reception', BatchReceptionController::class);
 Route::resource('/traceabilityx/delivery', DeliveryController::class);
 
 // });
