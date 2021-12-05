@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Cache;
+
 
 class TransactionController extends Controller
 {
@@ -20,82 +20,74 @@ class TransactionController extends Controller
      */
     public function index()
     {
-        $value = Cache::rememberForever('transaction', function () {
-            
-            $transaction = DB::table('ktv_tc_supplychain_transaction AS ktst')
-            ->select(
-                'ktst.SupplyTransID',
-                'ktst.SupplychainID',
-                'ktst.SupplyBatchID',
-                'ktst.TransNumber',
-                'ktst.InvoiceNumber',
-                'ktst.DateTransaction',
-                'ktst.SupplyType',
-                'ktst.SupplyID',
-                'ktsb.SupplyDestType',
-                'ktsb.SupplyDestProcessType',
-                'ktst.PlantationNr',
-                'ktst.VolumeBruto',
-                'ktst.VolumeNetto',
-                'ktst.VolumeCutting',
-                'ktst.PackageID',
-                'ktst.PackageNumber',
-                'ktst.PackageWeight',
-                'ktst.DetailTypeID',
-                'ktst.TransStatusID',
-                'ktst.ContractPrice',
-                'ktst.NetPrice',
-                'ktst.DiscountPrice',
-                'ktst.TotalPayment',
-                'ktst.PaymentReduction',
-                'ktst.PaymentPaid',
-                'ktst.Longitude',
-                'ktst.Latitude',
-                'ktst.Notes',
-                'ktst.ChangeLog',
-                'ktst.ChangeBy',
-                'ktst.DateCreated',
-                'ktst.CreatedBy',
-                'ktst.DateUpdated',
-                'ktst.LastModifiedBy',
-                'ktst.DOID',
-                'ktst.AgentID',
-                'ktst.AgentOther',
-                'ktst.AgentOtherNik',
-                'ktst.AgentOtherSurvey',
-                'ktst.SupplyBatchType',
-                'ktst.MillID',
-                'ktst.MillOther',
-                'ktst.DOOther',
-                'ktst.SupplyBatchSourceType',
-                'ktst.DeductionPercentage',
-                'ktst.DeductionWeight',
-                DB::raw('IFNULL(ktst.Bunches,0) AS Bunches'),
-                'ktst.CollectpointID',
-                'ktst.AutoTransNumber',
-                'ktst.isTraceable'
-            )
-            ->leftJoin('ktv_trace_package AS ktp', 'ktp.PackageID', '=', 'ktst.PackageID')
-            ->leftJoin('ktv_tc_supplychain_batch AS ktsb', 'ktsb.SupplyBatchID', '=', 'ktst.SupplyBatchID')
-            ->where('ktst.StatusCode', '=', 'active')
-            ->where('ktst.SupplychainID', '=', '767')
-            ->get();
-    
-            $total = $transaction->count();
-            
-        });
+        $transaction = DB::table('ktv_tc_supplychain_transaction AS ktst')
+        ->select(
+            'ktst.SupplyTransID',
+            'ktst.SupplychainID',
+            'ktst.SupplyBatchID',
+            'ktst.TransNumber',
+            'ktst.InvoiceNumber',
+            'ktst.DateTransaction',
+            'ktst.SupplyType',
+            'ktst.SupplyID',
+            'ktsb.SupplyDestType',
+            'ktsb.SupplyDestProcessType',
+            'ktst.PlantationNr',
+            'ktst.VolumeBruto',
+            'ktst.VolumeNetto',
+            'ktst.VolumeCutting',
+            'ktst.PackageID',
+            'ktst.PackageNumber',
+            'ktst.PackageWeight',
+            'ktst.DetailTypeID',
+            'ktst.TransStatusID',
+            'ktst.ContractPrice',
+            'ktst.NetPrice',
+            'ktst.DiscountPrice',
+            'ktst.TotalPayment',
+            'ktst.PaymentReduction',
+            'ktst.PaymentPaid',
+            'ktst.Longitude',
+            'ktst.Latitude',
+            'ktst.Notes',
+            'ktst.ChangeLog',
+            'ktst.ChangeBy',
+            'ktst.DateCreated',
+            'ktst.CreatedBy',
+            'ktst.DateUpdated',
+            'ktst.LastModifiedBy',
+            'ktst.DOID',
+            'ktst.AgentID',
+            'ktst.AgentOther',
+            'ktst.AgentOtherNik',
+            'ktst.AgentOtherSurvey',
+            'ktst.SupplyBatchType',
+            'ktst.MillID',
+            'ktst.MillOther',
+            'ktst.DOOther',
+            'ktst.SupplyBatchSourceType',
+            'ktst.DeductionPercentage',
+            'ktst.DeductionWeight',
+            DB::raw('IFNULL(ktst.Bunches,0) AS Bunches'),
+            'ktst.CollectpointID',
+            'ktst.AutoTransNumber',
+            'ktst.isTraceable'
+        )
+        ->leftJoin('ktv_trace_package AS ktp', 'ktp.PackageID', '=', 'ktst.PackageID')
+        ->leftJoin('ktv_tc_supplychain_batch AS ktsb', 'ktsb.SupplyBatchID', '=', 'ktst.SupplyBatchID')
+        ->where('ktst.StatusCode', '=', 'active')
+        ->where('ktst.SupplychainID', '=', '767')
+        ->get();
 
-        if($value){
-            return response()->json([
-                'data'    => $value->original
-            ]);
-        } else {
-            return response()->json([
-                'success' => failed,
-                'message' => 'Data tidak di temukan',
-                'code'    => 401  
-            ]);
-        }
+        $total = $transaction->count();
+         
+       //make response JSON
+       return response()->json([
+           'success' => true,
+           'message' => 'Data Berhasil Ditampilkan',
+           'total'   => $total,
+           'data'    => $transaction  
+       ], 200);
     }
 
     /**
