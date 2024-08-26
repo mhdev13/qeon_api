@@ -29,6 +29,5 @@ Route::get('transaction/{id}', [TransactionController::class, 'show']);
 
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('logout', [ApiController::class, 'logout']);
-    Route::get('get_user', [ApiController::class, 'get_user']);
     Route::get('transaction', [TransactionController::class, 'index']);
 });
