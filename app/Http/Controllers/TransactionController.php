@@ -74,6 +74,7 @@ class TransactionController extends Controller
             return response()->json($validator->errors(), 400);
         }
 
+        //if value equal
         if($request->total_amount === $request->paid_amount){
             $status = 'paid';
         } else {
