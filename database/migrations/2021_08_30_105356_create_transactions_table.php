@@ -15,12 +15,15 @@ class CreateTransactionsTable extends Migration
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
-            $table->char('uuid','36')->unique();
             $table->integer('user_id');
-            $table->timestamp('device_timestamp');
+            $table->integer('product_id');
+            $table->index(['user_id','product_id']);
             $table->integer('total_amount');
             $table->integer('paid_amount');
-            $table->enum('payment_method', ['cash', 'card']);
+            $table->string('payment_method',50);
+            $table->string('code_voucher',10);
+            $table->string('phone_number', 15);
+            $table->string('status',20);
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
         });

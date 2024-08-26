@@ -16,9 +16,8 @@ class ApiController extends Controller
     public function register(Request $request)
     {
     	//Validate data
-        $data = $request->only('uuid','name', 'email', 'password');
+        $data = $request->only('name', 'email', 'password');
         $validator = Validator::make($data, [
-            'uuid' => 'required|uuid',
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|max:50'
@@ -44,7 +43,7 @@ class ApiController extends Controller
             'data' => $user
         ], Response::HTTP_OK);
     }
- 
+
     public function authenticate(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -54,7 +53,7 @@ class ApiController extends Controller
             'email' => 'required|email',
             'password' => 'required|string|min:3'
         ]);
-        
+
         //Send failed response if request is not valid
         if ($validator->fails()) {
             return response()->json(['error' => $validator->messages()], 200);
@@ -76,14 +75,14 @@ class ApiController extends Controller
                 	'message' => 'Could not create token.',
                 ], 500);
         }
- 	
+
  		//Token created, return with success response and jwt token
         return response()->json([
             'success' => true,
             'token' => $token,
         ]);
     }
- 
+
     public function logout(Request $request)
     {
         //valid credential
@@ -96,10 +95,10 @@ class ApiController extends Controller
             return response()->json(['error' => $validator->messages()], 200);
         }
 
-		//Request is validated, do logout        
+		//Request is validated, do logout
         try {
             JWTAuth::invalidate($request->token);
- 
+
             return response()->json([
                 'success' => true,
                 'message' => 'User has been logged out'
@@ -111,7 +110,7 @@ class ApiController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
- 
+
     public function get_user(Request $request)
     {
         return response()->json(auth()->user());
